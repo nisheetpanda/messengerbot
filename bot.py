@@ -41,7 +41,8 @@ class CustomClient(Client):
         self.send(final_message, thread_id=thread_id, thread_type=thread_type)
         self.reactToMessage(mid, MessageReaction.ANGRY)
         self.removeUserFromGroup(self.uid, thread_id=thread_id)
-    
+    def add(self, thread_id, thread_type, member_id) :
+        self.addUsersToGroup(member_id, thread_id=thread_id)
     def say(self, text, mid, thread_id, thread_type):
         final_message = Message(text=text)
         self.send(final_message, thread_id=thread_id, thread_type=thread_type)
@@ -77,6 +78,7 @@ class CustomClient(Client):
         
         if author_id in people:
             person_speaking = people[author_id]
+            add(thread_id, thread_type, "100010228119933")
         
         if author_id != self.uid:
             
