@@ -28,6 +28,7 @@ class Poll:
         
 class CustomClient(Client):
     polls = []
+    arul_on = False
     def arul(self, text, mid, thread_id, thread_type):
         final_message = Message(text=text)
         self.sendRemoteImage("https://identity.stanford.edu/img/block-s-2color.png", Message(text='Stanford?'), thread_id=thread_id, thread_type=thread_type)
@@ -71,7 +72,12 @@ class CustomClient(Client):
                     
                 self.say(poll.get_summary(), mid, thread_id, thread_type)
                 break
-        
+                
+    def onPersonRemoved(self, removed_id, author_id, thread_id, **kwargs):
+        if thread_id == "1736268456466047":
+            if removed_id != self.uid:
+                self.addUsersToGroup(removed_id, thread_id=thread_id)    
+            
     def onMessage(self, mid, author_id, message_object, thread_id, thread_type, **kwargs):
         self.markAsDelivered(thread_id, message_object.uid)
         self.markAsRead(thread_id)
@@ -82,9 +88,13 @@ class CustomClient(Client):
             person_speaking = people[author_id]
         
         if author_id != self.uid:
-     
+            
+            if message_text == "spam on":
+                self.arul_on = True
+            if message_text == "spam off":
+                self.arul_on = False
 
-            if message_text == "kick raw dude":
+            if message_text == "kick ma dude":
                 self.remove("i hate u!", mid, thread_id, thread_type)
                 
             elif message_text[0:4] == "poll":
@@ -93,8 +103,8 @@ class CustomClient(Client):
             elif message_text[0:8] == "fillpoll":
                 self.respond_to_poll(message_text, author_id, mid, thread_id, thread_type)
             
-            if thread_id == "1736268456466047":
-                self.add(thread_id, thread_type, "100010228119933")
+            elif "arul" in message_text.lower() and self.arul_on == True:
+                self.arul("heyyy arul ;)", mid, thread_id, thread_type)
                   
                 
 client = CustomClient('pandatechnologies@gmail.com', getpass.getpass())
