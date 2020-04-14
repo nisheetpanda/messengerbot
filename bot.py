@@ -30,27 +30,40 @@ class CustomClient(Client):
     polls = []
     arul_on = False
     def arul(self, text, mid, thread_id, thread_type):
+        time.sleep(3)
         final_message = Message(text=text)
+        time.sleep(3)
         self.sendRemoteImage("https://identity.stanford.edu/img/block-s-2color.png", Message(text='Stanford?'), thread_id=thread_id, thread_type=thread_type)
+        time.sleep(3)
         self.sendRemoteImage("https://upload.wikimedia.org/wikipedia/en/thumb/2/29/Harvard_shield_wreath.svg/1200px-Harvard_shield_wreath.svg.png", Message(text='Harvard?'), thread_id=thread_id, thread_type=thread_type)
+        time.sleep(3)
         self.sendRemoteImage("https://i.pinimg.com/originals/b8/4f/0c/b84f0cfdee91f36c170a5e33bbc0ae66.jpg", Message(text='MIT?'), thread_id=thread_id, thread_type=thread_type)
+        time.sleep(3)
         self.send(final_message, thread_id=thread_id, thread_type=thread_type)
+        time.sleep(3)
         self.reactToMessage(mid, MessageReaction.LOVE)
   
     def remove(self, text, mid, thread_id, thread_type):
+        time.sleep(3)
         final_message = Message(text=text)
+        time.sleep(3)
         self.send(final_message, thread_id=thread_id, thread_type=thread_type)
+        time.sleep(3)
         self.reactToMessage(mid, MessageReaction.ANGRY)
+        time.sleep(3)
         self.removeUserFromGroup(self.uid, thread_id=thread_id)
         
     def add(self, thread_id, thread_type, member_id):
+        time.sleep(3)
         self.addUsersToGroup(member_id, thread_id=thread_id)
         
     def say(self, text, mid, thread_id, thread_type):
+        time.sleep(3)
         final_message = Message(text=text)
         self.send(final_message, thread_id=thread_id, thread_type=thread_type)
     
     def create_poll(self, text, mid, thread_id, thread_type):
+        time.sleep(3)
         messy_poll_data = text.split(" ")
         name_of_poll = messy_poll_data[1]
         choices = messy_poll_data[2:]
@@ -58,9 +71,11 @@ class CustomClient(Client):
         for choice in choices:
             poll_summary += choice + "\n"
         self.say(poll_summary, mid, thread_id, thread_type)
+        time.sleep(3)
         self.polls.append(Poll(name=name_of_poll, options=choices))
     
     def respond_to_poll(self, text, author_id,  mid, thread_id, thread_type):
+        time.sleep(3)
         messy_poll_data = text.split(" ")
         name_of_poll = messy_poll_data[1]
         choice = messy_poll_data[2].lower()
@@ -79,6 +94,7 @@ class CustomClient(Client):
                 self.addUsersToGroup(removed_id, thread_id=thread_id)    
             
     def onMessage(self, mid, author_id, message_object, thread_id, thread_type, **kwargs):
+        time.sleep(3)
         self.markAsDelivered(thread_id, message_object.uid)
         self.markAsRead(thread_id)
         message_text = message_object.text.lower()
@@ -107,6 +123,6 @@ class CustomClient(Client):
                 self.arul("heyyy arul ;)", mid, thread_id, thread_type)
                   
                 
-client = CustomClient('pandatechnologies@gmail.com', getpass.getpass())
+client = CustomClient('legomations10@gmail.com', getpass.getpass())
 
 client.listen()
