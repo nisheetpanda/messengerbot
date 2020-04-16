@@ -45,7 +45,15 @@ class CustomClient(Client):
         self.send(final_message, thread_id=thread_id, thread_type=thread_type)
         time.sleep(3)
         self.reactToMessage(mid, MessageReaction.LOVE)
-  
+    def countFrequency(self, my_dictionary): 
+        # Creating an empty dictionary  
+        freq = {} 
+        for item in my_dictionary.values(): 
+            if (item in freq): 
+                freq[item] += 1
+            else: 
+                freq[item] = 1
+        return freq 
     def remove(self, text, mid, thread_id, thread_type):
         time.sleep(3)
         final_message = Message(text=text)
@@ -83,16 +91,15 @@ class CustomClient(Client):
         name_of_poll = messy_poll_data[1]
         choice = messy_poll_data[2].lower()
         for poll in self.polls:
-            if poll.name == name_of_poll:
-                
+            if poll.name == name_of_poll:           
                 if author_id not in poll.individualVotes.keys() :
-                    poll.key_to_options[choice] += 1
                     poll.individualVotes.append(author_id, choice)
+                    frequencies = countFrequency(poll.individualVotes)
+                    poll.key_to_options[choice] = frequencies[choice]
                 else :
-                    ogChoice = poll.individualVotes[author_id]
-                    poll.key_to_options[ogChoice] -= 1
-                    poll.key_to_options[choice] += 1
                     poll.individualVotes[author_id] = choice
+                    frequencies = countFrequency(poll.individualVotes)
+                    poll.key_to_options[choice] = frequencies[choice]
                 self.say(poll.get_summary(), mid, thread_id, thread_type)
                 break
                 
