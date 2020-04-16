@@ -14,6 +14,7 @@ people = {"100002271757479": "Aarush",
 greetings = ['hello there', 'wassup', 'im aruls biggest fan']
 
 class Poll:
+    
     def __init__(self, name, options):
         self.key_to_options = {}
         self.name = name
@@ -21,6 +22,7 @@ class Poll:
             self.key_to_options[option] = []
             
     def get_summary(self):
+        self.key_to_options = sorted(self.key_to_options.items(), key=lambda x: x[1], reverse = True)
         message_text = self.name + "\n"
         for option in self.key_to_options.keys():
             message_text += option + " " + str(len(self.key_to_options[option])) + "\n"
