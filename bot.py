@@ -14,16 +14,19 @@ people = {"100002271757479": "Aarush",
 greetings = ['hello there', 'wassup', 'im aruls biggest fan']
 
 class Poll:
+    
     def __init__(self, name, options):
         self.key_to_options = {}
+        self.individualVotes = {}
         self.name = name
         for option in options:
             self.key_to_options[option] = []
             
     def get_summary(self):
+        self.key_to_options = sorted(self.key_to_options.items(), key=lambda x: x[1], reverse = True)
         message_text = self.name + "\n"
         for option in self.key_to_options.keys():
-            message_text += option + " " + str(len(self.key_to_options[option])) + "\n"
+            message_text += option + " " + str(self.key_to_options[option]) + "\n"
         return message_text
         
 class CustomClient(Client):
@@ -73,7 +76,7 @@ class CustomClient(Client):
         self.say(poll_summary, mid, thread_id, thread_type)
         time.sleep(3)
         self.polls.append(Poll(name=name_of_poll, options=choices))
-    
+
     def respond_to_poll(self, text, author_id,  mid, thread_id, thread_type):
         time.sleep(3)
         messy_poll_data = text.split(" ")
@@ -82,9 +85,14 @@ class CustomClient(Client):
         for poll in self.polls:
             if poll.name == name_of_poll:
                 
-                if author_id not in poll.key_to_options[choice]:
-                    poll.key_to_options[choice].append(author_id)
-                    
+                if author_id not in poll.individualVotes.keys() :
+                    poll.key_to_options[choice] += 1
+                    poll.individualVotes.append(author_id, choice)
+                else :
+                    ogChoice = poll.individualVotes[author_id]
+                    poll.key_to_options[ogChoice] -= 1
+                    poll.key_to_options[choice] += 1
+                    poll.individualVotes[author_id] = choice
                 self.say(poll.get_summary(), mid, thread_id, thread_type)
                 break
                 
